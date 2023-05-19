@@ -1,0 +1,241 @@
+program shooter;
+var
+key,petla,bonus,i,i2,i3,i4,delta2,skok2,xr,yr,nx,ny,oxs,oys,kont,hv,skokpom,celw,celh,punkty:integer;
+p1,p2,p3,p4,p5:integer;
+
+tablex:array [0..10] of integer;
+tabley:array [0..10] of integer;
+tableb:array [0..10] of integer;
+tablew:array [0..10] of integer;
+tableh:array [0..10] of integer;
+tableg:array [0..10] of integer;
+
+procedure shot;
+begin
+celw:=getWidth/2;
+celh:=getHeight/2;
+
+for i4:=0 to 10 do
+begin
+if ((tablex[i4]<celw) and (celw<(tablex[i4]+tablew[i4]+skok2)) and (tabley[i4]<celh) and ((tabley[i4]+tableh[i4]+skok2)>celh)) then
+begin
+
+punkty:=punkty+1;
+tablex[i4]:=9999;
+tabley[i4]:=9999;
+
+end;
+end;
+end;
+
+procedure daun(x,y,width,height,z:integer);
+begin
+
+z:=z/2;
+setColor(255, 0, 0);
+
+drawRect(x, y, width, height);
+drawRect(x+z, y+z, width, height);
+drawLine(x, y,x+z, y+z);
+drawLine(x+width, y,x+z+width, y+z);
+drawLine(x, y+height,x+z, y+z+height);
+drawLine(x+width, y+height,x+z+width, y+z+height);
+end;
+
+procedure matrix(delta,skok,kont,hv2:integer);
+begin
+
+for i3:=0 to 10 do
+begin
+
+if(hv2 <> 0) then begin
+
+tabley[i3]:=tabley[i3]+hv;
+
+end;
+
+nx:=trunc(((tablex[i3]-oxs)*cos(kont*3.14159265359/180))-((tabley[i3]-oys)*((sin(kont*3.14159265359/180)))));
+ny:=trunc(((tablex[i3]-oxs)*sin(kont*3.14159265359/180))+((tabley[i3]-oys)*((cos(kont*3.14159265359/180)))));
+
+tablex[i3]:=nx+oxs+1;
+tabley[i3]:=ny+oys+1;
+
+if ((skok2>0) and (skok2<20)) then begin
+
+if (((getWidth/2) > (tablex[i3]+delta)) and ((getHeight/2) > (tabley[i3]+delta))) then
+begin
+
+tabley[i3]:=tabley[i3]-delta;
+tablex[i3]:=tablex[i3]-delta;
+
+end;
+
+if (((getWidth/2)<tablex[i3]) and ((getHeight/2) > tabley[i3])) then
+begin
+
+tabley[i3]:=tabley[i3]-delta;
+tablex[i3]:=tablex[i3]+delta;
+
+end;
+
+
+if (((getWidth/2)<tablex[i3]) and ((getHeight/2) < tabley[i3])) then
+begin
+
+tabley[i3]:=tabley[i3]+delta;
+tablex[i3]:=tablex[i3]+delta;
+end;
+
+if (((getWidth/2)>tablex[i3]) and ((getHeight/2) < tabley[i3])) then
+begin
+
+tabley[i3]:=tabley[i3]+delta;
+tablex[i3]:=tablex[i3]-delta;
+
+end;
+end;
+end;
+end;
+
+begin
+randomize;
+for i:=0 to 10 do
+begin
+bonus:=1;
+tablex[i]:=random(100);
+tabley[i]:=random(100);
+tableb[i]:=bonus;
+tablew[i]:=random(5)+5;
+tableh[i]:=random(5)+5;
+tableg[i]:=random(5)+5;
+end;
+punkty:=0;
+petla:=1;
+oxs:=getWidth/2;
+oys:=getHeight;
+skok2:=5;
+  setColor(0, 0, 0);
+fillRect(0, 0, getWidth, getHeight);
+
+while(petla=1)do
+begin
+
+ if (GetKeyPressed <> 0) then
+begin
+key:=GetKeyPressed;
+
+
+
+if (key=KE_KEY2) then
+begin
+skok2:=skok2;
+delta2:=0;
+kont:=0;
+hv:=3;
+end;
+
+if (key=KE_KEY8) then
+begin
+skok2:=skok2;
+delta2:=0;
+kont:=0;
+hv:=0-3;
+end;
+
+if (key=KE_KEY4) then
+begin
+skok2:=skok2;
+delta2:=0;
+kont:=2;
+hv:=0;
+end;
+
+if (key=KE_KEY6) then
+begin
+skok2:=skok2;
+delta2:=0;
+kont:=-2;
+hv:=0;
+end;
+
+if (key=KE_KEY1) then
+begin
+skok2:=skok2+1;
+delta2:=2;
+kont:=0;
+hv:=0;
+end;
+
+if (key=KE_KEY3) then
+begin
+skok2:=skok2-1;
+delta2:=0-2;
+kont:=0;
+hv:=0;
+end;
+
+if (key=KE_KEY9) then
+begin
+petla:=2;
+end;
+
+if (key=KE_KEY5) then
+begin
+shot;
+skok2:=skok2;
+delta2:=0;
+kont:=0;
+hv:=0;
+end;
+
+setColor(0, 0, 0);
+fillRect(0, 0, getWidth, getHeight);
+matrix(delta2,skok2,kont,hv);
+end;
+
+{draw(100, 100, 50, 50, 50);}
+
+{daun(100,100,50,50,50);}
+for i2:=0 to 10 do
+begin
+
+if ((skok2>0) and (skok2<20)) then begin
+
+skokpom:=skok2;
+
+end;
+
+p1:=tablex[i2];
+p2:=tabley[i2];
+p3:=(tablew[i2]+skokpom);
+p4:=(tableh[i2]+skokpom);
+p5:=(tableg[i2]+skokpom);
+daun(trunc(p1),trunc(p2),trunc(p3),trunc(p4),trunc(p5));
+
+end;
+
+setColor(0, 0, 255);
+drawLine((getWidth/2)-15, (getHeight/2)-1,(getWidth/2)+15, (getHeight/2)-1);
+drawLine((getWidth/2)-15, (getHeight/2),(getWidth/2)+15, (getHeight/2));
+drawLine((getWidth/2)-15, (getHeight/2)+1,(getWidth/2)+15, (getHeight/2)+1);
+
+
+drawLine((getWidth/2)-1, (getHeight/2)-15,(getWidth/2)-1, (getHeight/2)+15);
+drawLine((getWidth/2), (getHeight/2)-15,(getWidth/2), (getHeight/2)+15);
+drawLine((getWidth/2)+1, (getHeight/2)-15,(getWidth/2)+1, (getHeight/2)+15);
+
+setColor(0, 255, 0);
+drawText("punkty: "+integerToString(punkty),0,10);
+
+repaint;
+
+delay(100);
+if (skok2<0) then begin
+skok2:=1;
+end;
+
+if (skok2>20) then begin
+skok2:=19;
+end;
+end;
+end.
